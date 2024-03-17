@@ -15,7 +15,7 @@ pipeline{
         }
         stage('Checkout from Git'){
             steps{
-                git branch: 'main', url: 'https://github.com/mudit097/Zomato-Clone.git'
+                git branch: 'main', url: ''
             }
         }
         stage("Sonarqube Analysis "){
@@ -56,20 +56,20 @@ pipeline{
                 script{
                    withDockerRegistry(credentialsId: 'docker', toolName: 'docker'){
                        sh "docker build -t zomato ."
-                       sh "docker tag zomato mudit097/zomato:latest "
-                       sh "docker push mudit097/zomato:latest "
+                       sh "docker tag zomato mvpar/zomato:latest "
+                       sh "docker push mvpar/zomato:latest "
                     }
                 }
             }
         }
         stage("TRIVY"){
             steps{
-                sh "trivy image mudit097/zomato:latest > trivy.txt"
+                sh "trivy image mvpar/zomato:latest > trivy.txt"
             }
         }
 	stage('Deploy to container'){
             steps{
-                sh 'docker run -d --name zomato -p 3000:3000 mudit097/zomato:latest'
+                sh 'docker run -d --name zomato -p 3000:3000 mvpar/zomato:latest'
             }
         }
     }
